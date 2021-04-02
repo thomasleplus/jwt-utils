@@ -14,7 +14,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: ShellCheck
         run: |
-          shellcheck $(find . -type f '(' \
+          shellcheck \
+            jwt-unsign \
+            $(find . -type f '(' \
             -name '*.bash' \
             -o -name '.bashrc' \
             -o -name 'bashrc' \
