@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Shellcheck
-        run: shellcheck $(find -type f '(' \
+      - name: ShellCheck
+        run: shellcheck $(find . -type f '(' \
             -name '*.bash' \
             -o -name '.bashrc' \
             -o -name 'bashrc' \
