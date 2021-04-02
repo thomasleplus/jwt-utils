@@ -13,7 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: ShellCheck
-        run: shellcheck $(find . -type f '(' \
+        run: |
+          shellcheck $(find . -type f '(' \
             -name '*.bash' \
             -o -name '.bashrc' \
             -o -name 'bashrc' \
