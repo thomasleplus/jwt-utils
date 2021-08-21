@@ -15,6 +15,7 @@ jobs:
     - name: ShellCheck
       run: |
         shellcheck \
+          jwt-unsign \
           $(find . -type f '(' \
           -name '*.bash' \
           -o -name '.bashrc' \
