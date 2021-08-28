@@ -1,4 +1,4 @@
-# jwt-utils
+# JWT utilities
 
 A few utilities to work with JWTs.
 
