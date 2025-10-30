@@ -98,3 +98,7 @@ See [LICENSE](LICENSE) for license information.
 ## Security
 
 See [SECURITY.md](SECURITY.md) for information about reporting security vulnerabilities.
+
+## Code of Conduct
+
+Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct.
