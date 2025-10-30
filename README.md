@@ -6,7 +6,7 @@ A collection of utilities for working with JSON Web Tokens (JWTs), primarily foc
 
 ### [jwt-unsign](jwt-unsign)
 
-A bash script that exploits the JWT "none" algorithm vulnerability by modifying JWTs found in input streams.
+A Bash script that exploits the JWT "none" algorithm vulnerability by modifying JWTs found in input streams.
 
 #### What it does
 
@@ -18,6 +18,7 @@ A bash script that exploits the JWT "none" algorithm vulnerability by modifying 
 #### The Vulnerability
 
 Some JWT implementations accept tokens with `alg` set to `"none"`, which means the token has no signature verification. This allows an attacker to forge tokens by:
+
 1. Taking a valid JWT
 2. Modifying the payload (claims)
 3. Setting the algorithm to "none"
@@ -58,16 +59,19 @@ cat burp-output.txt | jwt-unsign > modified.txt
 #### Example
 
 Input:
-```
+
+```yaml
 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
 
 Output:
-```
+
+```yaml
 token: eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
 ```
 
 The modified token has:
+
 - Header changed from `{"alg":"HS256","typ":"JWT"}` to `{"alg":"none","typ":"JWT"}`
 - Payload remains unchanged: `{"sub":"1234567890","name":"John Doe","iat":1516239022}`
 - Signature removed (note the trailing period)
@@ -75,6 +79,7 @@ The modified token has:
 #### Security Note
 
 This tool is intended for **authorized security testing only**. Use it responsibly and only on:
+
 - Systems you own
 - Systems you have explicit written permission to test
 - CTF (Capture The Flag) competitions
