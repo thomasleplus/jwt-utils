@@ -29,11 +29,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# Regex breakdown:
-# - eyJhbGciOiJ[a-zA-Z0-9_\-]\+iIsInR5cCI6IkpXVCJ9 : Matches JWT header with any algorithm
-# - \.\(e[a-zA-Z0-9_\-]\+\) : Captures the payload (starts with 'e' when base64 encoded)
-# - \.[a-zA-Z0-9_\-]* : Matches and discards the signature
+# Regex breakdown (extended regex, -E, so + and (...) work the same on GNU and
+# BSD/macOS sed):
+# - eyJhbGciOiJ[a-zA-Z0-9_-]+iIsInR5cCI6IkpXVCJ9 : Matches JWT header with any algorithm
+# - \.(e[a-zA-Z0-9_-]+) : Captures the payload (starts with 'e' when base64 encoded)
+# - \.[a-zA-Z0-9_-]* : Matches and discards the signature
 # Replacement:
 # - eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0 : New header with alg="none"
 # - .\1. : Payload with trailing period (invalid signature placeholder)
-/bin/sed -e 's/eyJhbGciOiJ[a-zA-Z0-9_\-]\+iIsInR5cCI6IkpXVCJ9\.\(e[a-zA-Z0-9_\-]\+\)\.[a-zA-Z0-9_\-]*/eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.\1./g'
+sed -E 's/eyJhbGciOiJ[a-zA-Z0-9_-]+iIsInR5cCI6IkpXVCJ9\.(e[a-zA-Z0-9_-]+)\.[a-zA-Z0-9_-]*/eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.\1./g'
